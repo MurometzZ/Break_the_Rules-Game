@@ -11,6 +11,7 @@ public class SuperSpeed : MonoBehaviour
     [Header("References")]
     PlayerMovement playerMovement;
     PlayerCheats playerCheats;
+    [SerializeField] GameObject icon;
 
     void Start()
     {
@@ -30,6 +31,8 @@ public class SuperSpeed : MonoBehaviour
 
         playerCheats.isUsingCheats = true;
 
+        icon.SetActive(true);
+
         Deactivate();
     }
 
@@ -44,5 +47,6 @@ public class SuperSpeed : MonoBehaviour
         playerMovement.jumpForce /= jumpForceIncrease;
 
         playerCheats.isUsingCheats = false;
+        icon.SetActive(false);
     }
 }

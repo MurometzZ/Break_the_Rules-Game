@@ -19,11 +19,6 @@ public class SuperSpeed : MonoBehaviour
         playerCheats = GetComponent<PlayerCheats>();
     }
 
-    void Update()
-    {
-        
-    }
-
     public void Activate()
     {
         playerMovement.movementSpeed *= speedIncrease;

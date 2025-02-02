@@ -3,8 +3,12 @@ using UnityEngine;
 
 public class Camera : MonoBehaviour
 {
+    bool playerCaught = false;
+
     public Transform turnAxis;
-    public float turnRadius = 30f;
+    public float minTurnAngle = -30f;
+    public float maxTurnAngle = 30f;
+    //public float turnRadius = 30f;
     public float rotationSpeed = 20f;
     public float pauseDuration = 1f;
     public float detectionRange = 10f;
@@ -17,14 +21,23 @@ public class Camera : MonoBehaviour
     private bool rotatingRight = true;
     private bool isPaused = false;
 
+    public Canvas playerCaughtCanvas;
+    public PlayerCheats playerCheats;
+    public PlayerMovement playerMovement;
+
+    void Start()
+    {
+        playerCaughtCanvas.gameObject.SetActive(false);
+    }
+
     void Update()
     {
         DetectPlayer();
         if (isPaused) return;
 
         float angle = Mathf.DeltaAngle(0, turnAxis.eulerAngles.z);
-        if (rotatingRight && angle >= turnRadius) StartCoroutine(PauseBeforeSwitch(false));
-        else if (!rotatingRight && angle <= -turnRadius) StartCoroutine(PauseBeforeSwitch(true));
+        if (rotatingRight && angle >= maxTurnAngle) StartCoroutine(PauseBeforeSwitch(false));
+        else if (!rotatingRight && angle <= minTurnAngle) StartCoroutine(PauseBeforeSwitch(true));
 
         float direction = rotatingRight ? 1 : -1;
         turnAxis.Rotate(0, 0, direction * rotationSpeed * Time.deltaTime);
@@ -40,6 +53,8 @@ public class Camera : MonoBehaviour
 
     void DetectPlayer()
     {
+        if(playerCaught) return;
+
         Vector2 baseDirection = turnAxis.TransformDirection(rayDirection).normalized; // Rotate ray direction with turnAxis
 
         for (int i = 0; i < rayCount; i++)
@@ -53,12 +68,20 @@ public class Camera : MonoBehaviour
             {
                 if (((1 << hit.collider.gameObject.layer) & playerMask) != 0)
                 {
-                    Debug.Log("Player Detected!");
-                    // Add game-over logic here
+                    if(playerCheats.isUsingCheats)
+                        PlayerCaught();
                 }
             }
 
             Debug.DrawRay(turnAxis.position, direction * (hit.collider ? hit.distance : detectionRange), hit.collider ? Color.red : Color.green);
         }
+    }
+
+    void PlayerCaught()
+    {
+        playerCaught = true;
+
+        playerMovement.canMove = false;
+        playerCaughtCanvas.gameObject.SetActive(true);
     }
 }

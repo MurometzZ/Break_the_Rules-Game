@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    bool isGrounded;
+    public bool isGrounded;
+    public bool canMove = true;
 
     [Header("Player Stats")]
     public float movementSpeed = 10f;
@@ -20,7 +21,12 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        HandleMovement();
+        if(canMove) 
+            HandleMovement();
+        else
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
     }
 
     void HandleMovement()
@@ -34,9 +40,14 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetButton("Jump") && isGrounded)
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            Jump();
         }
 
         rb.linearVelocity = new Vector2(moveInput * movementSpeed, rb.linearVelocity.y);
+    }
+
+    public void Jump()
+    {
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
     }
 }

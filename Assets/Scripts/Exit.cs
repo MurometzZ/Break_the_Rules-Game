@@ -7,9 +7,9 @@ public class Exit : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            PlayerPrefs.SetInt("LevelsUnlocked", SceneManager.loadedSceneCount + 1);
+            PlayerPrefs.SetInt("LevelsUnlocked", SceneManager.GetActiveScene().buildIndex + 1);
 
-            SceneManager.LoadScene(SceneManager.loadedSceneCount + 1);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
 }

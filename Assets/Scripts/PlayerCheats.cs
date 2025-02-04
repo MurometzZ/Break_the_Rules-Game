@@ -10,29 +10,48 @@ public class PlayerCheats : MonoBehaviour
     PlayerMovement playerMovement;
     SuperSpeed superSpeed;
     TripleJump tripleJump;
+    SuperStrength superStrength;
 
     void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
         superSpeed = GetComponent<SuperSpeed>();
         tripleJump = GetComponent<TripleJump>();
+        superStrength = GetComponent<SuperStrength>();
     }
 
     void Update()
     {
+        if (superSpeed.isActive && Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            superSpeed.DisableEffects();
+            return;
+        }
+
+        if (tripleJump.isActive && Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            tripleJump.Deactivate();
+        }
+
+        if (superStrength.isActive && Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            superStrength.Deactivate(0.01f);
+        }
+
         if (isUsingCheats) return;
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1) && !superStrength.isActive)
         {
-            Debug.Log("Cheat 1 activated (Super Speed)");
-
             superSpeed.Activate();
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2) && SceneManager.GetActiveScene().buildIndex >= 3)
+        if (Input.GetKeyDown(KeyCode.Alpha2) && SceneManager.GetActiveScene().buildIndex >= 3 && !superSpeed.isActive && !superStrength.isActive)
         {
-            Debug.Log("Cheat 2 activated (Triple Jump)");
-
             tripleJump.Activate();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3) && SceneManager.GetActiveScene().buildIndex >= 5 && !superSpeed.isActive)
+        {
+            superStrength.Activate();
         }
     }
 }

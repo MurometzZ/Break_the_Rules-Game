@@ -25,6 +25,7 @@ public class SuperSpeed : MonoBehaviour
         playerMovement.jumpForce *= jumpForceIncrease;
 
         playerCheats.isUsingCheats = true;
+        isActive = true;
 
         icon.SetActive(true);
 
@@ -36,12 +37,15 @@ public class SuperSpeed : MonoBehaviour
         Invoke("DisableEffects", effectLength);
     }
 
-    void DisableEffects()
+    public void DisableEffects()
     {
+        if (!isActive) return;
+
         playerMovement.movementSpeed /= speedIncrease;
         playerMovement.jumpForce /= jumpForceIncrease;
 
         playerCheats.isUsingCheats = false;
         icon.SetActive(false);
+        isActive = false;
     }
 }
